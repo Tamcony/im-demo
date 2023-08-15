@@ -9,8 +9,13 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AButton: typeof import('ant-design-vue/es')['Button']
+    ACheckbox: typeof import('ant-design-vue/es')['Checkbox']
     AInput: typeof import('ant-design-vue/es')['Input']
-    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    AInputGroup: typeof import('ant-design-vue/es')['InputGroup']
+    ASelect: typeof import('ant-design-vue/es')['Select']
+    ASelectOption: typeof import('ant-design-vue/es')['SelectOption']
+    Chat: typeof import('./../src/components/TUIKit/Chat.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
