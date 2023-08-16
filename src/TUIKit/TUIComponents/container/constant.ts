@@ -30,16 +30,17 @@ const constant: any = {
   typeAndroid: 'android',
   typeIphone: 'iphone',
   typeMini: 'miniprogram',
+  typeRedEnvelope: 'redEnvelope',
   typeUserTyping: 'user_typing_status',
   typeInputStatusIng: 'EIMAMSG_InputStatus_Ing',
   typeInputStatusEnd: 'EIMAMSG_InputStatus_End',
   scrollType: {
     toBottom: 'bottom',
-    toTarget: 'target',
+    toTarget: 'target'
   },
   inViewType: {
     page: 'page',
-    scroll: 'scroll',
+    scroll: 'scroll'
   },
   TYPE_CALL_MESSAGE: 1,
   CALL_ACTION_TYPE: {
@@ -47,8 +48,8 @@ const constant: any = {
     CANCEL_INVITE: 2,
     ACCEPT_INVITE: 3,
     REJECT_INVITE: 4,
-    INVITE_TIMEOUT: 5,
-  },
-};
+    INVITE_TIMEOUT: 5
+  }
+}
 
-export default constant;
+export default constant

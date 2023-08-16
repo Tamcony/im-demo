@@ -4,13 +4,24 @@
       <div>
         <h1>
           <label>{{ extension.title }}</label>
-          <a v-if="extension.hyperlinks_text" :href="extension.hyperlinks_text.value" target="view_window">{{
+          <a
+            v-if="extension.hyperlinks_text"
+            :href="extension.hyperlinks_text.value"
+            target="view_window"
+          >{{
             extension.hyperlinks_text.key
           }}</a>
         </h1>
         <ul v-if="extension.item && extension.item.length > 0">
-          <li v-for="(item, index) in extension.item" :key="index">
-            <a v-if="isUrl(item.value)" :href="item.value" target="view_window">{{ item.key }}</a>
+          <li
+            v-for="(item, index) in extension.item"
+            :key="index"
+          >
+            <a
+              v-if="isUrl(item.value)"
+              :href="item.value"
+              target="view_window"
+            >{{ item.key }}</a>
             <p v-else>{{ item.key }}</p>
           </li>
         </ul>
@@ -21,7 +32,11 @@
       <div class="evaluate">
         <h1>{{ $t('message.custom.对本次服务评价') }}</h1>
         <ul>
-          <li class="evaluate-list-item" v-for="(item, index) in ~~isCustom.score" :key="index">
+          <li
+            class="evaluate-list-item"
+            v-for="(item, index) in ~~isCustom.score"
+            :key="index"
+          >
             <i class="icon icon-star-light"></i>
           </li>
         </ul>
@@ -29,8 +44,14 @@
       </div>
     </template>
     <template v-else-if="isCustom.businessID === constant.typeOrder">
-      <div class="order" @click="openLink(isCustom.link)">
-        <img :src="isCustom.imageUrl" alt="" />
+      <div
+        class="order"
+        @click="openLink(isCustom.link)"
+      >
+        <img
+          :src="isCustom.imageUrl"
+          alt=""
+        />
         <main>
           <h1>{{ isCustom.title }}</h1>
           <p>{{ isCustom.description }}</p>
@@ -41,13 +62,35 @@
     <template v-else-if="isCustom.businessID === constant.typeTextLink">
       <div class="textLink">
         <p>{{ isCustom.text }}</p>
-        <a :href="isCustom.link" target="view_window">{{ $t('message.custom.查看详情>>') }}</a>
+        <a
+          :href="isCustom.link"
+          target="view_window"
+        >{{ $t('message.custom.查看详情>>') }}</a>
       </div>
     </template>
     <template v-else-if="isCustom.businessID === constant.TYPE_CALL_MESSAGE">
-      <div class="call" @click="handleCallAgain" :class="`call-${data?.message?.conversationType}`">
-        <i class="icon" :class="handleCallMessageIcon()"></i>
+      <div
+        class="call"
+        @click="handleCallAgain"
+        :class="`call-${data?.message?.conversationType}`"
+      >
+        <i
+          class="icon"
+          :class="handleCallMessageIcon()"
+        ></i>
         <span>{{ data.custom }}</span>
+      </div>
+    </template>
+    <!-- 判断自定义消息展示类型 -->
+    <template v-else-if="isCustom.businessID === constant.redEnvelope">
+      <div class="textLink">
+        <!-- 展示文本 -->
+        <p>{{ isCustom.text }}</p>
+        <!-- 展示超链接 -->
+        <a
+          :href="isCustom.link"
+          target="view_window"
+        >{{ $t('message.custom.查看详情>>') }}</a>
       </div>
     </template>
     <template v-else>
@@ -57,10 +100,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watchEffect, reactive, toRefs } from 'vue';
-import { isUrl, JSONToObject } from '../utils/utils';
-import constant from '../../constant';
-import { useStore } from 'vuex';
+import { defineComponent, watchEffect, reactive, toRefs } from 'vue'
+import { isUrl, JSONToObject } from '../utils/utils'
+import constant from '../../constant'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   props: {
@@ -70,66 +113,66 @@ export default defineComponent({
     },
   },
   setup(props: any, ctx: any) {
-    const VuexStore = ((window as any)?.TUIKitTUICore?.isOfficial && useStore && useStore()) || {};
+    const VuexStore = ((window as any)?.TUIKitTUICore?.isOfficial && useStore && useStore()) || {}
     const data = reactive({
       data: {} as any,
       extension: {},
       isCustom: '',
       constant: constant,
-    });
+    })
     watchEffect(() => {
-      data.data = props.data;
+      data.data = props.data
       const {
         message: { payload },
-      } = props.data;
-      data.isCustom = payload.data || ' ';
-      data.isCustom = JSONToObject(payload.data);
+      } = props.data
+      data.isCustom = payload.data || ' '
+      data.isCustom = JSONToObject(payload.data)
       if (payload.data === constant.typeService) {
-        data.extension = JSONToObject(payload.extension);
+        data.extension = JSONToObject(payload.extension)
       }
-    });
+    })
     const openLink = (url: any) => {
-      window.open(url);
-    };
+      window.open(url)
+    }
     const handleCallMessageIcon = () => {
-      const callType = JSON.parse(JSON.parse(data?.data?.message?.payload?.data)?.data)?.call_type;
-      let className = '';
+      const callType = JSON.parse(JSON.parse(data?.data?.message?.payload?.data)?.data)?.call_type
+      let className = ''
       switch (callType) {
         case 1:
-          className = 'icon-call-voice';
-          break;
+          className = 'icon-call-voice'
+          break
         case 2:
-          className = 'icon-call-video';
-          break;
+          className = 'icon-call-video'
+          break
         default:
-          break;
+          break
       }
-      return className;
-    };
+      return className
+    }
 
     const handleCallAgain = async () => {
-      const callType = JSON.parse(JSON.parse(props?.data?.message?.payload?.data)?.data)?.call_type;
+      const callType = JSON.parse(JSON.parse(props?.data?.message?.payload?.data)?.data)?.call_type
       switch (data?.data?.message?.conversationType) {
         case (window as any).TUIKitTUICore.TIM.TYPES.CONV_C2C:
           // eslint-disable-next-line no-case-declarations
-          const { flow, to, from } = data?.data?.message;
-          if (to === from) break;
+          const { flow, to, from } = data?.data?.message
+          if (to === from) break
           try {
             await (window as any)?.TUIKitTUICore?.TUIServer?.TUICallKit?.call({
               userID: flow === 'out' ? to : from,
               type: callType,
             });
-            (window as any)?.TUIKitTUICore?.isOfficial && VuexStore?.commit && VuexStore?.commit('handleTask', 6);
+            (window as any)?.TUIKitTUICore?.isOfficial && VuexStore?.commit && VuexStore?.commit('handleTask', 6)
           } catch (error) {
-            console.warn(error);
+            console.warn(error)
           }
-          break;
+          break
         case (window as any).TUIKitTUICore.TIM.TYPES.CONV_GROUP:
-          break;
+          break
         default:
-          break;
+          break
       }
-    };
+    }
 
     return {
       ...toRefs(data),
@@ -137,37 +180,45 @@ export default defineComponent({
       openLink,
       handleCallMessageIcon,
       handleCallAgain,
-    };
+    }
   },
-});
+})
 </script>
 <style lang="scss" scoped>
 @import url('../../../styles/common.scss');
 @import url('../../../styles/icon.scss');
+
 a {
   color: #679ce1;
 }
+
 .custom {
   font-size: 14px;
+
   h1 {
     font-size: 14px;
     color: #000000;
   }
+
   h1,
   a,
   p {
     font-size: 14px;
   }
+
   .evaluate {
     ul {
       display: flex;
       padding-top: 10px;
     }
   }
+
   .order {
     display: flex;
+
     main {
       padding-left: 5px;
+
       p {
         font-family: PingFangSC-Regular;
         width: 145px;
@@ -178,27 +229,31 @@ a {
         margin-bottom: 6px;
         word-break: break-word;
       }
+
       span {
         font-family: PingFangSC-Regular;
         line-height: 25px;
         color: #ff7201;
       }
     }
+
     img {
       width: 67px;
       height: 67px;
     }
   }
+
   .call {
     display: flex;
     flex-direction: row;
     align-items: center;
+
     &-C2C {
       cursor: pointer;
     }
+
     &-GROUP {
       cursor: default;
     }
   }
-}
-</style>
+}</style>

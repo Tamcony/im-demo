@@ -8,16 +8,18 @@
         <TUISearch class="search" />
         <TUIConversation @current="handleCurrentConversation" />
       </div>
-      <div class="chat" v-show="!data.env?.isH5 || data.currentModel === 'message'">
+      <div
+        class="chat"
+        v-show="!data.env?.isH5 || data.currentModel === 'message'"
+      >
         <TUIChat>
           <h1>欢迎使用腾讯云即时通信IM</h1>
         </TUIChat>
       </div>
       <!-- TUICallKit 组件：通话 UI 组件主体 -->
       <TUICallKit
-        :class="
-          !data.showCallMini ? 'callkit-drag-container' : 'callkit-drag-container-mini'
-        "
+        :class="!data.showCallMini ? 'callkit-drag-container' : 'callkit-drag-container-mini'
+          "
         :allowedMinimized="true"
         :allowedFullScreen="false"
         :beforeCalling="beforeCalling"
@@ -40,6 +42,19 @@ const data = reactive({
   showCall: false,
   showCallMini: false,
 })
+const customMsg = {
+  data: {
+    // 自定义消息类型的标识字段
+    businessID: 'redEnvelope',
+    // 超文本类自定义消息文字说明部分
+    text: '欢迎加入腾讯云IM大家庭',
+    // 超文本类自定义消息超链接部分
+    link: 'https://buy.cloud.tencent.com/avc',
+  },
+  description: '欢迎加入腾讯云IM大家庭',
+  extension: '欢迎加入腾讯云IM大家庭',
+}
+
 const TUIServer = (window as any)?.TUIKitTUICore?.TUIServer
 const handleCurrentConversation = (value: string) => {
   data.currentModel = value ? "message" : "conversation"
@@ -73,7 +88,7 @@ const onMessageSentByMe = async (message: any) => {
 .home-TUIKit-main {
   display: flex;
   height: 100vh;
-  padding:50px 100px;
+  padding: 50px 100px;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -103,6 +118,7 @@ const onMessageSentByMe = async (message: any) => {
   box-shadow: 16px 16px 16px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
+
 .chat {
   flex: 1;
   height: 100%;
@@ -126,5 +142,4 @@ const onMessageSentByMe = async (message: any) => {
   height: 56px;
   right: 10px;
   top: 70px;
-}
-</style>
+}</style>

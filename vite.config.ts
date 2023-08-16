@@ -47,6 +47,13 @@ export default defineConfig({
   },
   server: {
     host: "0.0.0.0",
-    proxy: {},
+    proxy: {
+      // 代理示例
+      '/api': {
+        target: 'https://video.aituxt.com/appapi',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    },
   },
 })

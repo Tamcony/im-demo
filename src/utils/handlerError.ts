@@ -13,8 +13,9 @@ export const handleError = (error: unknown) => {
   if (isAxiosError(error)) {
     console.error('isAxiosError')
   } else if (isCmdError(error)) {
-    console.error(error.message)
+    console.error('isCmdError')
+    throw error
   } else {
-    console.error(error)
+    console.error('error')
   }
 }

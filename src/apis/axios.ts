@@ -1,16 +1,16 @@
 import _axios, { type AxiosResponse } from 'axios'
 
 interface CmdData {
-  code: number
+  ret: number
   data: any
-  message: string
+  msg: string
 }
 
 export interface CmdError {
   isCmdError: true
-  code: number
+  ret: number
   data: any
-  message: string
+  msg: string
 }
 
 const instance = _axios.create({
@@ -18,7 +18,7 @@ const instance = _axios.create({
 })
 
 instance.interceptors.response.use((response: AxiosResponse<CmdData>) => {
-  if (response.data.code !== 0) {
+  if (response.data.ret !== 200) {
     return Promise.reject({
       isCmdError: true,
       ...response.data,
