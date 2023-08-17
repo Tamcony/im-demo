@@ -9,14 +9,15 @@ import { setupTUIKit } from '@/plugins/TUIKit'
 
 const app = createApp(App)
 
-const setupPlugin = () => {
-  setupTUIKit(app)
-}
+
 
 const setupApp = () => {
   setupStore(app)
   setupRouter(app)
   app.mount('#app')
+}
+const setupPlugin = () => {
+  setupTUIKit(app)
 }
 
 setupPlugin()

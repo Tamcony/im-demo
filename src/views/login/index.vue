@@ -48,6 +48,7 @@ import { useSendCode, useLogin } from '@/apis/useLogin'
 
 const { sendCode } = useSendCode()
 const { login } = useLogin()
+const router = useRouter()
 
 const areaPrefix = ref('86')
 const phoneNum = ref('')
@@ -84,19 +85,19 @@ const handleSendCode = async () => {
     areaPrefix.value
   )
   message.info(data.msg)
-  console.log(data)
+
+
 }
 
 const handleLogin = async () => {
-  //TODO 登录
   if (!phoneCheck()) {
     return
   }
-  const data = await login(
+  await login(
     phoneNum.value,
     areaPrefix.value
   )
-  console.log(data)
+  router.push('/chat')
 }
 
 </script>

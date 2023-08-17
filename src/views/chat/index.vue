@@ -27,6 +27,14 @@
         :onMinimized="onMinimized"
         :onMessageSentByMe="onMessageSentByMe"
       />
+      <!-- <TUICallKit
+        :allowedMinimized="true"
+        :allowedFullScreen="true"
+        :beforeCalling="beforeCalling"
+        :afterCalling="afterCalling"
+        :onMinimized="onMinimized"
+      /> -->
+
     </div>
   </div>
 </template>
@@ -35,6 +43,10 @@
 import { reactive } from "vue"
 import { TUIEnv } from "@/TUIKit/TUIPlugin"
 import { handleErrorPrompts } from "@/TUIKit/TUIComponents/container/utils"
+import { useUserStore } from "@/stores/userStore"
+import { loginTUIKit } from "@/plugins/TUIKit"
+
+const userStore = useUserStore()
 
 const data = reactive({
   env: TUIEnv(),
@@ -82,6 +94,17 @@ const onMessageSentByMe = async (message: any) => {
   TUIServer?.TUIChat?.handleMessageSentByMeToView(message)
   return
 }
+
+watch(() => userStore.user, (user) => {
+  console.log(user)
+  if (user) {
+    console.log(user)
+    loginTUIKit(user?.id, user?.usersign)
+  }
+}, {
+  deep: true,
+  immediate: true,
+})
 </script>
 
 <style scoped>
@@ -127,10 +150,10 @@ const onMessageSentByMe = async (message: any) => {
 
 .callkit-drag-container {
   position: fixed;
-  left: calc(50% - 25rem);
-  top: calc(50% - 18rem);
-  width: 50rem;
-  height: 36rem;
+  left: calc(50% - 200px);
+  top: calc(50% - 300px);
+  width: 400px;
+  height: 600px;
   border-radius: 16px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
   border: 1px solid #000;
@@ -140,6 +163,12 @@ const onMessageSentByMe = async (message: any) => {
   position: fixed;
   width: 168px;
   height: 56px;
-  right: 10px;
+  right: 120px;
   top: 70px;
-}</style>
+}
+
+.callkit-dialog {
+  height: 600px;
+  width: 400px;
+}
+</style>

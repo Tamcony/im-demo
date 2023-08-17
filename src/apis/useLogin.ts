@@ -2,6 +2,7 @@ import { axios } from './axios'
 import { handleError } from '@/utils/handlerError'
 import dayjs from 'dayjs'
 import { generateSign } from '@/utils/handleSign'
+import { useUserStore } from '@/stores/userStore'
 
 export const useSendCode = () => {
   const sendCode = async (phone: string, countryCode: string) => {
@@ -27,6 +28,7 @@ export const useSendCode = () => {
 }
 
 export const useLogin = () => {
+  const userStore = useUserStore()
   const login = async (phone: string, countryCode: string, code: string = '123456') => {
     try {
       const res = await axios.get('/public/index.php', {
@@ -39,6 +41,13 @@ export const useLogin = () => {
           country_code: countryCode
         }
       })
+      userStore.user = res.data.info[0]
+      console.log(res.data.info[0],userStore.user)
+      const token = res.data.info[0].token
+      localStorage.setItem('IM_TOKEN', token)
+      localStorage.setItem('IM_USERID', res.data.info[0].id)
+      localStorage.setItem('IM_USERSIG', res.data.info[0].usersign)
+      return res.data
     } catch (error) {
       handleError(error)
     }

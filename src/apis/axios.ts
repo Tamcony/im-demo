@@ -28,4 +28,12 @@ instance.interceptors.response.use((response: AxiosResponse<CmdData>) => {
   return response
 })
 
+instance.interceptors.request.use((config) => {
+  const token = localStorage.getItem('IM_TOKEN')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+
 export const axios = instance

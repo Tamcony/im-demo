@@ -23,6 +23,16 @@ const router = createRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('IM_TOKEN')
+  if (to.name !== 'login' && !token) {
+    next({ name: 'login' })
+  } else {
+    next()
+  }
+})
+
+
 export const setupRouter = async (app: any) => {
   app.use(router)
   await router.isReady()
