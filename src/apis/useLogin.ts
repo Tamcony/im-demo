@@ -3,6 +3,7 @@ import { handleError } from '@/utils/handlerError'
 import dayjs from 'dayjs'
 import { generateSign } from '@/utils/handleSign'
 import { useUserStore } from '@/stores/userStore'
+import { v4 } from 'uuid'
 
 export const useSendCode = () => {
   const sendCode = async (phone: string, countryCode: string) => {
@@ -36,13 +37,13 @@ export const useLogin = () => {
           service: 'Login.userLogin',
           user_login: phone,
           code,
-          source: 'h5',
-          mobileid: '562d4226cb2a2b4f74b3ef4340828b5d',
+          source: 'android',
+          mobileid: v4(),
           country_code: countryCode
         }
       })
       userStore.user = res.data.info[0]
-      console.log(res.data.info[0],userStore.user)
+      console.log(res.data.info[0], userStore.user)
       const token = res.data.info[0].token
       localStorage.setItem('IM_TOKEN', token)
       localStorage.setItem('IM_USERID', res.data.info[0].id)

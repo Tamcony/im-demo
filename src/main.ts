@@ -14,11 +14,11 @@ const app = createApp(App)
 const setupApp = () => {
   setupStore(app)
   setupRouter(app)
-  app.mount('#app')
 }
 const setupPlugin = () => {
   setupTUIKit(app)
 }
 
-setupPlugin()
 setupApp()
+setupPlugin()
+app.mount('#app')

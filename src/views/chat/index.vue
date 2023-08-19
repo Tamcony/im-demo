@@ -46,6 +46,7 @@ import { handleErrorPrompts } from "@/TUIKit/TUIComponents/container/utils"
 import { useUserStore } from "@/stores/userStore"
 import { loginTUIKit } from "@/plugins/TUIKit"
 
+
 const userStore = useUserStore()
 
 const data = reactive({
@@ -54,18 +55,7 @@ const data = reactive({
   showCall: false,
   showCallMini: false,
 })
-const customMsg = {
-  data: {
-    // 自定义消息类型的标识字段
-    businessID: 'redEnvelope',
-    // 超文本类自定义消息文字说明部分
-    text: '欢迎加入腾讯云IM大家庭',
-    // 超文本类自定义消息超链接部分
-    link: 'https://buy.cloud.tencent.com/avc',
-  },
-  description: '欢迎加入腾讯云IM大家庭',
-  extension: '欢迎加入腾讯云IM大家庭',
-}
+
 
 const TUIServer = (window as any)?.TUIKitTUICore?.TUIServer
 const handleCurrentConversation = (value: string) => {
@@ -104,6 +94,24 @@ watch(() => userStore.user, (user) => {
 }, {
   deep: true,
   immediate: true,
+})
+
+
+
+watch(() => TUIServer?.TUIConversation, () => {
+  // console.log(TUIServer?.getConversationProfile())
+
+  console.log(TUIServer?.TUIConversation)
+}, {
+  deep: true,
+  immediate: true
+})
+onMounted(() => {
+  // document.addEventListener('keydown', (event) => {
+  //   //发送自定义信息
+  //   TUIServer?.TUIChat?.sendCustomMessage(customMsg)
+  // })
+    
 })
 </script>
 

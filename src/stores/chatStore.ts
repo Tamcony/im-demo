@@ -1,8 +1,8 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia"
 
-export const useChatStore = defineStore('chat', ()=>{
-  const TUIKit = ref()
+export const useChatStore = defineStore('chatStore',()=>{
+  const chat = ref()
   return {
-    TUIKit
+    chat
   }
 })

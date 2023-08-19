@@ -141,7 +141,7 @@
   .dialog {
     position: absolute;
     z-index: 5;
-    padding: 2px 20px;
+    padding:  8px;
 
     &-item {
       top: 30px;
@@ -150,10 +150,17 @@
     }
 
     .conversation-options {
-      padding: 5px 0;
-      height: 17px;
+      padding: 10px !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      height: 30px;
       font-size: 12px;
       line-height: 17px;
+      &:hover {
+        background: #F5F5F5;
+      }
     }
   }
 }

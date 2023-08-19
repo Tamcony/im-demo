@@ -1,7 +1,16 @@
 <template>
-  <div class="transfer" :class="[isH5 ? 'transfer-h5' : '']">
-    <header class="transfer-h5-header" v-if="isH5">
-      <i class="icon icon-back" @click="cancel"></i>
+  <div
+    class="transfer"
+    :class="[isH5 ? 'transfer-h5' : '']"
+  >
+    <header
+      class="transfer-h5-header"
+      v-if="isH5"
+    >
+      <i
+        class="icon icon-back"
+        @click="cancel"
+      ></i>
       <span class="title">{{ title }}</span>
     </header>
     <main class="main">
@@ -16,14 +25,23 @@
         </header>
         <main>
           <ul class="list">
-            <li class="list-item" @click="selectedAll" v-if="optional.length > 1 && !isRadio">
+            <li
+              class="list-item"
+              @click="selectedAll"
+              v-if="optional.length > 1 && !isRadio"
+            >
               <i
                 class="icon"
                 :class="[selectedList.length === optional.length ? 'icon-selected' : 'icon-unselected']"
               ></i>
               <span class="all">{{ $t('component.全选') }}</span>
             </li>
-            <li class="list-item" v-for="(item, index) in list" :key="index" @click="selected(item)">
+            <li
+              class="list-item"
+              v-for="(item, index) in list"
+              :key="index"
+              @click="selected(item)"
+            >
               <i
                 class="icon"
                 :class="[
@@ -41,7 +59,10 @@
                 <span v-if="item?.isDisabled">（{{ $t('component.已在群聊中') }}）</span>
               </template>
               <template v-else>
-                <slot name="left" :data="item" />
+                <slot
+                  name="left"
+                  :data="item"
+                />
               </template>
             </li>
           </ul>
@@ -49,11 +70,18 @@
       </div>
       <div class="right">
         <header v-if="!isH5">{{ title }}</header>
-        <ul class="list" v-show="resultShow">
+        <ul
+          class="list"
+          v-show="resultShow"
+        >
           <p v-if="selectedList.length > 0 && !isH5">
             {{ $t('component.已选中') }}{{ selectedList.length }}{{ $t('component.人') }}
           </p>
-          <li class="list-item space-between" v-for="(item, index) in selectedList" :key="index">
+          <li
+            class="list-item space-between"
+            v-for="(item, index) in selectedList"
+            :key="index"
+          >
             <aside>
               <template v-if="!isCustomItem">
                 <img
@@ -64,16 +92,34 @@
                 <span v-if="!isH5">{{ item.nick || item.userID }}</span>
               </template>
               <template v-else>
-                <slot name="right" :data="item" />
+                <slot
+                  name="right"
+                  :data="item"
+                />
               </template>
             </aside>
-            <i class="icon icon-cancel" @click="selected(item)" v-if="!isH5"></i>
+            <i
+              class="icon icon-cancel"
+              @click="selected(item)"
+              v-if="!isH5"
+            ></i>
           </li>
         </ul>
         <footer>
-          <button class="btn btn-cancel" @click="cancel">{{ $t('component.取消') }}</button>
-          <button v-if="selectedList.length > 0" class="btn" @click="submit">{{ $t('component.完成') }}</button>
-          <button v-else class="btn btn-no" @click="submit">{{ $t('component.完成') }}</button>
+          <button
+            class="btn btn-cancel"
+            @click="cancel"
+          >{{ $t('component.取消') }}</button>
+          <button
+            v-if="selectedList.length > 0"
+            class="btn"
+            @click="submit"
+          >{{ $t('component.完成') }}</button>
+          <button
+            v-else
+            class="btn btn-no"
+            @click="submit"
+          >{{ $t('component.完成') }}</button>
         </footer>
       </div>
     </main>
@@ -81,7 +127,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watchEffect, toRefs, computed } from 'vue';
+import { defineComponent, reactive, watchEffect, toRefs, computed } from 'vue'
 
 export default defineComponent({
   props: {
@@ -130,66 +176,65 @@ export default defineComponent({
       isSearch: true,
       isCustomItem: false,
       title: '',
-    });
+    })
 
     watchEffect(() => {
       if (props.isCustomItem) {
         for (let index = 0; index < props.list.length; index++) {
           if (props.list[index].conversationID.indexOf('@TIM#SYSTEM') > -1) {
             // eslint-disable-next-line vue/no-mutating-props
-            props.list.splice(index, 1);
+            props.list.splice(index, 1)
           }
-          data.list = props.list;
+          data.list = props.list
         }
       } else {
-        data.list = props.list;
+        data.list = props.list
       }
-      data.selectedList = props.selectedList;
-      data.isSearch = props.isSearch;
-      data.isCustomItem = props.isCustomItem;
-      data.title = props.title;
-      data.type = props.type;
-    });
+      data.selectedList = props.selectedList
+      data.isSearch = props.isSearch
+      data.isCustomItem = props.isCustomItem
+      data.title = props.title
+      data.type = props.type
+    })
 
     // 可选项
-    const optional = computed(() => data.list.filter((item: any) => !item.isDisabled));
+    const optional = computed(() => data.list.filter((item: any) => !item.isDisabled))
 
     const handleInput = (e: any) => {
-      ctx.emit('search', e.target.value);
-    };
+      ctx.emit('search', e.target.value)
+    }
 
     const selected = (item: any) => {
       if (item.isDisabled) {
-        return;
+        return
       }
-      let list: any = data.selectedList;
-      const index: number = list.indexOf(item);
+      let list: any = data.selectedList
+      const index: number = list.indexOf(item)
       if (index > -1) {
-        return data.selectedList.splice(index, 1);
+        return data.selectedList.splice(index, 1)
       }
       if (props.isRadio) {
-        list = [];
+        list = []
       }
-      list.push(item);
-      data.selectedList = list;
-    };
+      list.push(item)
+      data.selectedList = list
+    }
 
     const selectedAll = () => {
       if (data.selectedList.length === optional.value.length) {
-        data.selectedList = [];
+        data.selectedList = []
       } else {
-        data.selectedList = [...optional.value];
+        data.selectedList = [...optional.value]
       }
-    };
+    }
 
     const submit = () => {
-      ctx.emit('submit', data.selectedList);
-    };
+      ctx.emit('submit', data.selectedList)
+    }
 
     const cancel = () => {
-      ctx.emit('cancel');
-    };
-
+      ctx.emit('cancel')
+    }
     return {
       ...toRefs(data),
       optional,
@@ -198,9 +243,9 @@ export default defineComponent({
       selectedAll,
       submit,
       cancel,
-    };
+    }
   },
-});
+})
 </script>
 
 <style lang="scss" scoped src="./style/transfer.scss"></style>

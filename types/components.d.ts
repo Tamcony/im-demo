@@ -13,6 +13,8 @@ declare module '@vue/runtime-core' {
     Accept: typeof import('./../src/components/TUICallKit/src/Components/TUICallKit-vue3/components/common/Button/Accept.vue')['default']
     AInput: typeof import('ant-design-vue/es')['Input']
     AInputGroup: typeof import('ant-design-vue/es')['InputGroup']
+    ARadio: typeof import('ant-design-vue/es')['Radio']
+    ARadioGroup: typeof import('ant-design-vue/es')['RadioGroup']
     ASelect: typeof import('ant-design-vue/es')['Select']
     BtnOperate: typeof import('./../src/components/TUICallKit/src/Components/TUICallKit-vue3/components/GroupCall/BtnOperate/BtnOperate.vue')['default']
     Camera: typeof import('./../src/components/TUICallKit/src/Components/TUICallKit-vue3/components/common/Button/Camera.vue')['default']

@@ -7,7 +7,6 @@ import Video from './plugin-components/video';
 import File from './plugin-components/file';
 import Forward from './plugin-components/forward';
 import Words from './plugin-components/words';
-import Evaluate from './plugin-components/evaluate';
 import TypingHeader from './plugin-components/typingHeader';
 import ReadReceiptDialog from './plugin-components/readReceiptDialog';
 import Replies from './plugin-components/replies';
@@ -20,7 +19,6 @@ let sendComponents: any = {
   Image,
   Video,
   File,
-  Evaluate,
   Words,
   Call,
 };

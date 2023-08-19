@@ -427,10 +427,13 @@ defineExpose({
   height: auto;
   background: #f4f5f9;
   border-radius: 9.4px;
-  padding: 7px 0px 7px 10px;
+  padding: 7px 10px;
   font-size: 16px !important;
   max-height: 86px;
   margin-right: 7px;
+}
+.message-input-area{
+  margin-right: -25px;
 }
 </style>
 <style lang="scss">

@@ -30,7 +30,7 @@ const constant: any = {
   typeAndroid: 'android',
   typeIphone: 'iphone',
   typeMini: 'miniprogram',
-  typeRedEnvelope: 'redEnvelope',
+  typeRedEnvelope: 'red_packet',
   typeUserTyping: 'user_typing_status',
   typeInputStatusIng: 'EIMAMSG_InputStatus_Ing',
   typeInputStatusEnd: 'EIMAMSG_InputStatus_End',

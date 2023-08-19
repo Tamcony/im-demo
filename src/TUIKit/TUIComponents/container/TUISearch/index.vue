@@ -1,11 +1,18 @@
 <template>
-  <div class="TUI-search" :class="[env.isH5 ? 'TUI-search-H5' : '']" ref="dialog">
+  <div
+    class="TUI-search"
+    :class="[env.isH5 ? 'TUI-search-H5' : '']"
+    ref="dialog"
+  >
     <header @click="toggleOptionalShow">
       <i class="plus"></i>
       <h1 v-if="env.isH5">{{ $t('TUISearch.发起会话') }}</h1>
       <ul v-show="optionalShow">
         <li>
-          <i class="icon icon-c2c" v-if="env.isH5"></i>
+          <i
+            class="icon icon-c2c"
+            v-if="env.isH5"
+          ></i>
           <h1 @click="showOpen('isC2C')">{{ $t('TUISearch.发起单聊') }}</h1>
         </li>
         <li>
@@ -33,19 +40,29 @@
         @cancel="toggleOpen"
         v-if="step === 1"
       />
-      <CreateGroup v-else @submit="create" @cancel="toggleOpen" :isH5="env.isH5" />
+      <CreateGroup
+        v-else
+        @submit="create"
+        @cancel="toggleOpen"
+        :isH5="env.isH5"
+      />
     </Dialog>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, ref, toRefs } from 'vue';
-import CreateGroup from './components/createGroup';
-import Dialog from '../../components/dialog/index.vue';
-import Transfer from '../../components/transfer/index.vue';
-import { useStore } from 'vuex';
-import constant from '../constant';
-import { onClickOutside } from '@vueuse/core';
-import { handleErrorPrompts, handleSuccessPrompts } from '../utils';
+import { defineComponent, reactive, ref, toRefs } from 'vue'
+import CreateGroup from './components/createGroup'
+import Dialog from '../../components/dialog/index.vue'
+import Transfer from '../../components/transfer/index.vue'
+import { useStore } from 'vuex'
+import constant from '../constant'
+import { onClickOutside } from '@vueuse/core'
+import { handleErrorPrompts, handleSuccessPrompts } from '../utils'
+import { useFans } from '@/apis/useFans'
+import { useUserStore } from '@/stores/userStore'
+
+const { getFans } = useFans()
+
 const TUISearch = defineComponent({
   name: 'TUISearch',
 
@@ -56,14 +73,15 @@ const TUISearch = defineComponent({
   },
 
   setup(props) {
-    const TUIServer: any = TUISearch?.TUIServer;
-    const { t } = TUIServer.TUICore.config.i18n.useI18n();
+    const TUIServer: any = TUISearch?.TUIServer
+    const { t } = TUIServer.TUICore.config.i18n.useI18n()
     const data = reactive({
       open: false,
       searchUserID: '',
       selectedList: [],
       allUserList: [],
       searchUserList: [],
+      userFansList: [],
       step: 1,
       group: {
         groupID: '',
@@ -84,23 +102,23 @@ const TUISearch = defineComponent({
       env: TUIServer.TUICore.TUIEnv,
       optionalShow: !TUIServer.TUICore.TUIEnv.isH5,
       needSearch: !TUIServer.TUICore.isOfficial,
-    });
+    })
 
-    TUIServer.bind(data);
+    TUIServer.bind(data)
 
-    const GroupServer = TUIServer?.TUICore?.TUIServer?.TUIGroup;
-    CreateGroup.TUIServer = TUIServer;
+    const GroupServer = TUIServer?.TUICore?.TUIServer?.TUIGroup
+    CreateGroup.TUIServer = TUIServer
 
-    const VuexStore = ((window as any)?.TUIKitTUICore?.isOfficial && useStore && useStore()) || {};
+    const VuexStore = ((window as any)?.TUIKitTUICore?.isOfficial && useStore && useStore()) || {}
 
-    const dialog: any = ref();
+    const dialog: any = ref()
 
     onClickOutside(dialog, () => {
       if (data.env.isH5) {
-        data.optionalShow = false;
-        data.searchUserList = [...data.allUserList];
+        data.optionalShow = false
+        data.searchUserList = [...data.allUserList]
       }
-    });
+    })
 
     // 初始化群组属性
     // Initialize group parameters
@@ -118,112 +136,119 @@ const TUISearch = defineComponent({
             userID: '',
           },
         ],
-      };
-    };
+      }
+    }
 
     const toggleOpen = () => {
-      data.open = !data.open;
+      data.open = !data.open
       if (!data.open) {
-        data.searchUserID = '';
-        data.step = 1;
-        initGroupOptions();
+        data.searchUserID = ''
+        data.step = 1
+        initGroupOptions()
       }
-    };
+    }
 
     const submit = (userList: any) => {
       if (data.createConversationType === constant.typeC2C) {
-        const { userID } = userList[0];
-        handleCurrentConversation(userID, 'C2C');
-        toggleOpen();
+        const { userID } = userList[0]
+        handleCurrentConversation(userID, 'C2C')
+        toggleOpen()
       } else {
         if (!CreateGroup.TUIServer) {
-          const message = t('TUISearch.创建群聊，请注册 TUIGroup 模块');
-          handleErrorPrompts(message, data.env);
+          const message = t('TUISearch.创建群聊，请注册 TUIGroup 模块')
+          handleErrorPrompts(message, data.env)
         }
-        initGroupOptions();
-        data.group.memberList = userList.map((item: any) => ({ userID: item.userID }));
-        data.step = 2;
+        initGroupOptions()
+        data.group.memberList = userList.map((item: any) => ({ userID: item.userID }))
+        data.step = 2
       }
-      data.searchUserList = [...data.allUserList];
-    };
+      data.searchUserList = [...data.allUserList]
+    }
 
     // creating group
     const create = async (params: any) => {
       if (params.type === TUIServer.TUICore.TIM.TYPES.GRP_PUBLIC) {
-        data.group.joinOption = TUIServer.TUICore.TIM.TYPES.JOIN_OPTIONS_NEED_PERMISSION;
+        data.group.joinOption = TUIServer.TUICore.TIM.TYPES.JOIN_OPTIONS_NEED_PERMISSION
       }
-      const options = { ...data.group, ...params };
+      const options = { ...data.group, ...params }
       if (params.type === TUIServer.TUICore.TIM.TYPES.GRP_AVCHATROOM) {
-        delete options.memberList;
-        delete options.joinOption;
+        delete options.memberList
+        delete options.joinOption
       }
       try {
-        const imResponse = await GroupServer.createGroup(options);
-        const message = t('TUISearch.创建成功');
+        const imResponse = await GroupServer.createGroup(options)
+        const message = t('TUISearch.创建成功')
         handleSuccessPrompts(message, data.env);
-        (window as any)?.TUIKitTUICore?.isOfficial && VuexStore?.commit && VuexStore?.commit('handleTask', 3);
-        toggleOpen();
+        (window as any)?.TUIKitTUICore?.isOfficial && VuexStore?.commit && VuexStore?.commit('handleTask', 3)
+        toggleOpen()
         if (params.type === TUIServer.TUICore.TIM.TYPES.GRP_AVCHATROOM) {
           GroupServer.joinGroup({
             groupID: imResponse.data.group.groupID,
             applyMessage: '',
             type: imResponse.data.group.type,
-          });
+          })
         }
-        handleCurrentConversation(imResponse.data.group.groupID, 'GROUP');
+        handleCurrentConversation(imResponse.data.group.groupID, 'GROUP')
       } catch (imError: any) {
-        handleErrorPrompts(imError, data.env);
+        handleErrorPrompts(imError, data.env)
       }
-    };
+    }
 
     const handleCurrentConversation = (id: string, type: string) => {
-      const name = `${type}${id}`;
+      const name = `${type}${id}`
       TUIServer.getConversationProfile(name).then((imResponse: any) => {
         // 通知 TUIConversation 模块切换当前会话
         // Notify TUIConversation to toggle the current conversation
-        TUIServer.TUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
-      });
-    };
+        TUIServer.TUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
+      })
+    }
 
     const showOpen = (type: string) => {
-      data.open = true;
-      data.searchUserList = [...data.allUserList];
+      data.open = true
+      data.searchUserList = [...data.userFansList]
       switch (type) {
         case 'isC2C':
-          data.createConversationType = constant.typeC2C;
-          data.showTitle = t('TUISearch.发起单聊');
-          return data.showTitle;
+          data.createConversationType = constant.typeC2C
+          data.showTitle = t('TUISearch.发起单聊')
+          return data.showTitle
         case 'isGroup':
-          data.createConversationType = constant.typeGroup;
-          data.showTitle = t('TUISearch.发起群聊');
-          return data.showTitle;
+          data.createConversationType = constant.typeGroup
+          data.showTitle = t('TUISearch.发起群聊')
+          return data.showTitle
       }
-    };
+    }
 
     const toggleOptionalShow = () => {
       if (data.env.isH5) {
-        data.optionalShow = !data.optionalShow;
+        data.optionalShow = !data.optionalShow
       }
-    };
+    }
 
     const handleSearch = async (val: any) => {
       try {
-        const imResponse: any = await TUIServer.getUserProfile([val]);
+        const imResponse: any = await TUIServer.getUserProfile([val])
         if (!imResponse.data.length) {
-          handleErrorPrompts(t('TUISearch.该用户不存在'), data.env);
-          data.searchUserList = [...data.allUserList];
-          return;
+          handleErrorPrompts(t('TUISearch.该用户不存在'), data.env)
+          data.searchUserList = [...data.allUserList]
+          return
         }
-        data.searchUserList = imResponse.data;
-        const searchAllResult = data.allUserList.filter((item: any) => item.userID === imResponse.data[0].userID);
-        data.allUserList = searchAllResult.length ? data.allUserList : [...data.allUserList, ...data.searchUserList];
+        data.searchUserList = imResponse.data
+        const searchAllResult = data.allUserList.filter((item: any) => item.userID === imResponse.data[0].userID)
+        data.allUserList = searchAllResult.length ? data.allUserList : [...data.allUserList, ...data.searchUserList]
       } catch (error) {
-        handleErrorPrompts(t('TUISearch.该用户不存在'), data.env);
-        data.searchUserList = [...data.allUserList];
-        return;
+        handleErrorPrompts(t('TUISearch.该用户不存在'), data.env)
+        data.searchUserList = [...data.allUserList]
+        return
       }
-    };
-
+    }
+    watchEffect(() => {
+      console.log(data.allUserList)
+    })
+    onMounted(async () => {
+      const userStore = useUserStore()
+      data.userFansList = await getFans(userStore.user?.id) || []
+      data.searchUserList = [...data.userFansList]
+    })
     return {
       ...toRefs(data),
       toggleOpen,
@@ -233,10 +258,10 @@ const TUISearch = defineComponent({
       showOpen,
       toggleOptionalShow,
       dialog,
-    };
+    }
   },
-});
-export default TUISearch;
+})
+export default TUISearch
 </script>
 
 <style lang="scss" scoped src="./style/index.scss"></style>
