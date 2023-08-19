@@ -44,10 +44,10 @@ export const useLogin = () => {
       })
       userStore.user = res.data.info[0]
       console.log(res.data.info[0], userStore.user)
-      const token = res.data.info[0].token
-      localStorage.setItem('IM_TOKEN', token)
-      localStorage.setItem('IM_USERID', res.data.info[0].id)
-      localStorage.setItem('IM_USERSIG', res.data.info[0].usersign)
+      const token = res.data.info[0]?.token
+      sessionStorage.setItem('IM_TOKEN', token)
+      sessionStorage.setItem('IM_USERID', res.data.info[0].id)
+      sessionStorage.setItem('IM_USERSIG', res.data.info[0].usersign)
       return res.data
     } catch (error) {
       handleError(error)

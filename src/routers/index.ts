@@ -24,7 +24,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem('IM_TOKEN')
+  const token = sessionStorage.getItem('IM_TOKEN')
   if (to.name !== 'login' && !token) {
     next({ name: 'login' })
   } else {

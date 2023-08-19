@@ -26,8 +26,8 @@ export const setupTUIKit = (app: App) => {
   TUIKit.use(TUIComponents)
   // TUIKit add TUICallKit
   TUIKit.use(TUICallKit)
-  if (localStorage.getItem('IM_USERID') && localStorage.getItem('IM_USERSIG')) {
-    loginTUIKit(localStorage.getItem('IM_USERID') as string, localStorage.getItem('IM_USERSIG') as string)
+  if (sessionStorage.getItem('IM_USERID') && sessionStorage.getItem('IM_USERSIG')) {
+    loginTUIKit(sessionStorage.getItem('IM_USERID') as string, sessionStorage.getItem('IM_USERSIG') as string)
   }
   const chatStore = useChatStore()
   chatStore.chat = TUIKit

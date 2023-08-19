@@ -7,7 +7,7 @@ export const useRedEnvelope = () => {
         params: {
           service: `Hongbao.send`,
           uid: userId,
-          token: (localStorage.getItem('IM_TOKEN') as string) || '',
+          token: (sessionStorage.getItem('IM_TOKEN') as string) || '',
           type,
           num,
           totalmoney,

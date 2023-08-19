@@ -29,7 +29,7 @@ instance.interceptors.response.use((response: AxiosResponse<CmdData>) => {
 })
 
 instance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('IM_TOKEN')
+  const token = sessionStorage.getItem('IM_TOKEN')
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }

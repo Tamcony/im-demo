@@ -16,6 +16,6 @@ export const handleError = (error: unknown) => {
     console.error('isCmdError')
     throw error
   } else {
-    console.error('error')
+    console.error(error)
   }
 }
