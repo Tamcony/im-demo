@@ -279,7 +279,7 @@ const manage = defineComponent({
       show: false,
       typeName: {
         [types.GRP_WORK]: '好友工作群',
-        [types.GRP_PUBLIC]: '陌生人社交群',
+        [types.GRP_PUBLIC]: '公开群',
         [types.GRP_MEETING]: '临时会议群',
         [types.GRP_AVCHATROOM]: '直播群',
         [types.JOIN_OPTIONS_FREE_ACCESS]: '自由加入',

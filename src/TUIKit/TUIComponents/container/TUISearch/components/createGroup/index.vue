@@ -128,7 +128,7 @@ const group:any = defineComponent({
       type: [
         {
           icon: 'https://web.sdk.qcloud.com/im/assets/images/Public.svg',
-          label: '陌生人社交群（Public）',
+          label: '公开群（Public）',
           type: group.TUIServer.TUICore.TIM.TYPES.GRP_PUBLIC,
           detail: '类似 QQ 群，创建后群主可以指定群管理员，用户搜索群 ID 发起加群申请后，需要群主或管理员审批通过才能入群。详见',
           src: '产品文档',

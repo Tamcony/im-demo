@@ -9,7 +9,7 @@ export const errorMap = {
 
 export const groupType = {
   work: '好友工作群',
-  public: '陌生人社交群',
+  public: '公开群',
   Meeting: '临时会议群',
   AVChatRom: '直播群',
 };

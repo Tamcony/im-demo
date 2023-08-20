@@ -37,7 +37,11 @@
         </a-input-group>
       </div>
       <div class=" flex-col justify-center gap-16">
-        <a-button @click="handleLogin">立即登录</a-button>
+        <a-button
+          :disabled="!isGetCode"
+          :title="!isGetCode?'请先获取验证码':''"
+          @click="handleLogin"
+        >立即登录</a-button>
       </div>
     </div>
   </div>
@@ -54,6 +58,7 @@ const router = useRouter()
 const areaPrefix = ref('86')
 const phoneNum = ref('')
 const code = ref('')
+const isGetCode = ref(false)
 const options = [
   { value: '86', label: '+86 中国' },
   { value: '1', label: '+1 美国' },
@@ -86,6 +91,7 @@ const handleSendCode = async () => {
     phoneNum.value,
     areaPrefix.value
   )
+  isGetCode.value = true
   message.info(data.msg)
 
 
