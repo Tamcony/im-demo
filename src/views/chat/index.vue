@@ -1,6 +1,8 @@
 <template>
-  <div class="home-TUIKit-main">
-    <div class="TUIKit-container">
+  <div :class="!data.env?.isH5
+    ? 'home-TUIKit-main' : 'home-TUIKit-main-mobile'">
+    <div class="TUIKit-container" :style="!data.env?.isH5
+    ? 'border-radius: 16px;' : ''">
       <div
         :class="data.env?.isH5 ? 'conversation-h5' : 'conversation'"
         v-show="!data.env?.isH5 || data.currentModel === 'conversation'"
@@ -111,7 +113,7 @@ onMounted(() => {
   //   //发送自定义信息
   //   TUIServer?.TUIChat?.sendCustomMessage(customMsg)
   // })
-    
+
 })
 </script>
 
@@ -122,6 +124,11 @@ onMounted(() => {
   padding: 50px 100px;
   box-sizing: border-box;
   overflow: hidden;
+}
+
+.home-TUIKit-main-mobile{
+  display: flex;
+  height: 100vh;
 }
 
 .search {
@@ -145,7 +152,7 @@ onMounted(() => {
   height: 100%;
   position: relative;
   border: 1px solid #cccccc;
-  border-radius: 16px;
+  
   box-shadow: 16px 16px 16px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
