@@ -16,17 +16,22 @@
       @click.prevent.right="toggleDialog"
     >
       <aside class="left">
-        <img class="avatar" :src="handleConversation?.avator(conversation)" />
+        <img
+          class="avatar"
+          :src="handleConversation?.avator(conversation)"
+        />
         <div
           class="online-status"
-          :class="
-            userStatusList?.get(conversation?.userProfile?.userID)?.statusType === 1
-              ? 'online-status-online'
-              : 'online-status-offline'
-          "
+          :class="userStatusList?.get(conversation?.userProfile?.userID)?.statusType === 1
+            ? 'online-status-online'
+            : 'online-status-offline'
+            "
           v-if="showUserOnlineStatus()"
         ></div>
-        <span class="num" v-if="conversation.unreadCount > 0 && conversation.messageRemindType !== 'AcceptNotNotify'">
+        <span
+          class="num"
+          v-if="conversation.unreadCount > 0 && conversation.messageRemindType !== 'AcceptNotNotify'"
+        >
           {{ conversation.unreadCount > 99 ? '99+' : conversation.unreadCount }}
         </span>
         <span
@@ -43,8 +48,7 @@
             <span
               class="middle-box-at"
               v-if="conversation.type === 'GROUP' && conversation.groupAtInfoList.length > 0"
-              >{{ handleConversation?.showAt(conversation) }}</span
-            >
+            >{{ handleConversation?.showAt(conversation) }}</span>
             <p>{{ handleConversation?.showMessage(conversation) }}</p>
           </div>
         </div>
@@ -59,12 +63,27 @@
         </div>
       </div>
     </div>
-    <div class="dialog dialog-item" v-if="toggle" ref="dialog">
-      <p class="conversation-options" @click.stop="handleItem('delete')">{{ $t('TUIConversation.删除会话') }}</p>
-      <p class="conversation-options" v-if="!conversation.isPinned" @click.stop="handleItem('ispinned')">
+    <div
+      class="dialog dialog-item"
+      v-if="toggle"
+      ref="dialog"
+    >
+      <p
+        class="conversation-options"
+        @click.stop="handleItem('delete')"
+      >{{ $t('TUIConversation.删除会话') }}</p>
+      <p
+        class="conversation-options"
+        v-if="!conversation.isPinned"
+        @click.stop="handleItem('ispinned')"
+      >
         {{ $t('TUIConversation.置顶会话') }}
       </p>
-      <p class="conversation-options" v-if="conversation.isPinned" @click.stop="handleItem('dispinned')">
+      <p
+        class="conversation-options"
+        v-if="conversation.isPinned"
+        @click.stop="handleItem('dispinned')"
+      >
         {{ $t('TUIConversation.取消置顶') }}
       </p>
       <p
@@ -85,9 +104,13 @@
   </li>
 </template>
 <script lang="ts">
-import { onClickOutside, useElementBounding } from '@vueuse/core';
-import { defineComponent, nextTick, reactive, ref, toRefs, watch, watchEffect } from 'vue';
-import { Conversation } from '../../interface';
+import { onClickOutside, useElementBounding } from '@vueuse/core'
+import { defineComponent, nextTick, reactive, ref, toRefs, watch, watchEffect } from 'vue'
+import { Conversation } from '../../interface'
+import { useTitle } from '@vueuse/core'
+import { useUserStore } from '@/stores/userStore'
+
+
 const ListItem: any = defineComponent({
   props: {
     conversation: {
@@ -124,6 +147,8 @@ const ListItem: any = defineComponent({
     },
   },
   setup(props: any, ctx: any) {
+
+    const userStore = useUserStore()
     const data = reactive({
       conversation: {} as Conversation,
       currentID: '',
@@ -134,69 +159,81 @@ const ListItem: any = defineComponent({
       loop: 0,
       displayOnlineStatus: false,
       userStatusList: new Map(),
-    });
+    })
 
-    const dialog: any = ref();
-    const content: any = ref();
+    const dialog: any = ref()
+    const content: any = ref()
 
     onClickOutside(content, () => {
       if (data.toggle === true) {
-        ctx.emit('toggle', '');
+        ctx.emit('toggle', '')
       }
-    });
+    })
 
     watchEffect(() => {
-      data.conversation = props.conversation;
-      data.currentID = props.currentID;
-      data.toggle = false;
-      data.displayOnlineStatus = props.displayOnlineStatus;
-      data.userStatusList = props.userStatusList;
-      props.toggleID === props.conversation.conversationID && (data.toggle = true);
-    });
+      data.conversation = props.conversation
+      data.currentID = props.currentID
+      data.toggle = false
+      data.displayOnlineStatus = props.displayOnlineStatus
+      data.userStatusList = props.userStatusList
+      props.toggleID === props.conversation.conversationID && (data.toggle = true)
+    })
 
     watch(
       () => data.toggle,
       (val: boolean) => {
         if (val) {
           nextTick(() => {
-            const DialogBound = useElementBounding(dialog);
-            const ParentEle = content?.value?.offsetParent;
-            const ParentBound = useElementBounding(ParentEle);
+            const DialogBound = useElementBounding(dialog)
+            const ParentEle = content?.value?.offsetParent
+            const ParentBound = useElementBounding(ParentEle)
             if (DialogBound.top.value - ParentBound.top.value - DialogBound.height.value - 30 > 0) {
-              dialog.value.style.top = 'auto';
-              dialog.value.style.bottom = '30px';
+              dialog.value.style.top = 'auto'
+              dialog.value.style.bottom = '30px'
             }
-          });
+          })
         }
       }
-    );
+    )
+
+    // watch(() => props.conversation.unreadCount, count => {
+    //   console.log(count)
+    //   if (count > 0) {
+    //     useTitle(`你有${count}条新消息`)
+    //   } else {
+    //     useTitle(`${userStore.user?.user_nickname}`)
+    //   }
+    // },{
+    //   immediate: true,
+    //   deep: true,
+    // })
 
     const handleListItem = (item: any) => {
-      ctx.emit('open', item);
-      ctx.emit('toggle', '');
-    };
+      ctx.emit('open', item)
+      ctx.emit('toggle', '')
+    }
 
     const toggleDialog = (e?: any) => {
       if (e?.target?.oncontextmenu) {
         e.target.oncontextmenu = function () {
-          return false;
-        };
+          return false
+        }
       }
-      ctx.emit('toggle', (data.conversation as any).conversationID);
-    };
+      ctx.emit('toggle', (data.conversation as any).conversationID)
+    }
 
     const handleItem = (name: string) => {
       ctx.emit('handle', {
         name,
         conversation: data.conversation,
-      });
-      ctx.emit('toggle', '');
-    };
+      })
+      ctx.emit('toggle', '')
+    }
 
     const showUserOnlineStatus = () => {
-      if (data.displayOnlineStatus && data.conversation?.type === props.types.CONV_C2C) return true;
-      return false;
-    };
+      if (data.displayOnlineStatus && data.conversation?.type === props.types.CONV_C2C) return true
+      return false
+    }
 
     return {
       ...toRefs(data),
@@ -206,9 +243,9 @@ const ListItem: any = defineComponent({
       content,
       toggleDialog,
       showUserOnlineStatus,
-    };
+    }
   },
-});
-export default ListItem;
+})
+export default ListItem
 </script>
 <style lang="scss" scoped src="./style/index.scss"></style>

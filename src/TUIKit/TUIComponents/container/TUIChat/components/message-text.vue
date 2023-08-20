@@ -35,6 +35,7 @@ export default defineComponent({
 .text-img {
   width: 20px;
   height: 20px;
+  display: inline;
 }
 .text-box {
   white-space: pre-wrap;

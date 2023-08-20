@@ -1,8 +1,11 @@
 <template>
   <div :class="!data.env?.isH5
     ? 'home-TUIKit-main' : 'home-TUIKit-main-mobile'">
-    <div class="TUIKit-container" :style="!data.env?.isH5
-    ? 'border-radius: 16px;' : ''">
+    <div
+      class="TUIKit-container"
+      :style="!data.env?.isH5
+        ? 'border-radius: 16px;' : ''"
+    >
       <div
         :class="data.env?.isH5 ? 'conversation-h5' : 'conversation'"
         v-show="!data.env?.isH5 || data.currentModel === 'conversation'"
@@ -15,7 +18,7 @@
         v-show="!data.env?.isH5 || data.currentModel === 'message'"
       >
         <TUIChat>
-          <h1>欢迎使用腾讯云即时通信IM</h1>
+          <h1>欢迎,{{ userStore.user?.user_nickname || '' }}</h1>
         </TUIChat>
       </div>
       <!-- TUICallKit 组件：通话 UI 组件主体 -->
@@ -47,6 +50,7 @@ import { TUIEnv } from "@/TUIKit/TUIPlugin"
 import { handleErrorPrompts } from "@/TUIKit/TUIComponents/container/utils"
 import { useUserStore } from "@/stores/userStore"
 import { loginTUIKit } from "@/plugins/TUIKit"
+import { useTitle } from "@vueuse/core"
 
 
 const userStore = useUserStore()
@@ -113,7 +117,7 @@ onMounted(() => {
   //   //发送自定义信息
   //   TUIServer?.TUIChat?.sendCustomMessage(customMsg)
   // })
-
+  useTitle(userStore.user?.user_nickname)
 })
 </script>
 
@@ -126,7 +130,7 @@ onMounted(() => {
   overflow: hidden;
 }
 
-.home-TUIKit-main-mobile{
+.home-TUIKit-main-mobile {
   display: flex;
   height: 100vh;
 }
@@ -152,7 +156,7 @@ onMounted(() => {
   height: 100%;
   position: relative;
   border: 1px solid #cccccc;
-  
+
   box-shadow: 16px 16px 16px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
