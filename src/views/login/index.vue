@@ -27,6 +27,7 @@
         <a-input-group class="w-full flex flex-row gap-4">
           <a-input
             placeholder="请输入验证码"
+            v-model:value="code"
             class="w-3/5"
           ></a-input>
           <a-button
@@ -52,6 +53,7 @@ const router = useRouter()
 
 const areaPrefix = ref('86')
 const phoneNum = ref('')
+const code = ref('')
 const options = [
   { value: '86', label: '+86 中国' },
   { value: '1', label: '+1 美国' },
@@ -91,6 +93,10 @@ const handleSendCode = async () => {
 
 const handleLogin = async () => {
   if (!phoneCheck()) {
+    return
+  }
+  if (!code.value) {
+    message.error('请输入验证码')
     return
   }
   await login(
