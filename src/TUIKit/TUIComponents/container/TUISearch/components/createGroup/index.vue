@@ -46,8 +46,8 @@
                         </aside>
                         <i v-if="profile.type === item.type" class="icon icon-selected"></i>
                       </div>
-                      <span class="select-item-detail">{{$t(`TUISearch.${item.detail}`)}}</span>
-                      <a :href="Link.product.url" target="view_window">{{$t(`TUISearch.${item.src}`)}}</a>
+                      <!-- <span class="select-item-detail">{{$t(`TUISearch.${item.detail}`)}}</span>
+                      <a :href="Link.product.url" target="view_window">{{$t(`TUISearch.${item.src}`)}}</a> -->
                     </main>
                   </li>
                 </ul>
@@ -58,8 +58,8 @@
               </div>
               <article class="group-h5-list-item-introduction"  v-if="isH5">
                 <label class="introduction-name">{{groupTypeDetail.label}}：</label>
-                <span class="introduction-detail">{{$t(`TUISearch.${groupTypeDetail.detail}`)}}</span>
-                <a :href="Link.product.url" target="view_window">{{$t(`TUISearch.${groupTypeDetail.src}`)}}</a>
+                <!-- <span class="introduction-detail">{{$t(`TUISearch.${groupTypeDetail.detail}`)}}</span>
+                <a :href="Link.product.url" target="view_window">{{$t(`TUISearch.${groupTypeDetail.src}`)}}</a> -->
               </article>
             </li>
           </ul>
@@ -81,8 +81,8 @@
                   </aside>
                   <i v-if="editConfig.value === item.type" class="icon icon-selected"></i>
                 </div>
-                <span class="select-item-detail">{{$t(`TUISearch.${item.detail}`)}}</span>
-                <a :href="Link.product.url" target="view_window">{{$t(`TUISearch.${item.src}`)}}</a>
+                <!-- <span class="select-item-detail">{{$t(`TUISearch.${item.detail}`)}}</span>
+                <a :href="Link.product.url" target="view_window">{{$t(`TUISearch.${item.src}`)}}</a> -->
               </main>
             </li>
           </ul>
@@ -97,6 +97,7 @@
 <script lang="ts">
 import { computed, defineComponent, reactive, toRefs } from 'vue';
 import Link from '../../../../../utils/link';
+import { useUserStore } from '@/stores/userStore';
 
 const group:any = defineComponent({
   name: 'group',
@@ -107,6 +108,7 @@ const group:any = defineComponent({
     },
   },
   setup(props:any, ctx:any) {
+    const userStore = useUserStore()
     const data = reactive({
       profile: {
         groupID: '',
@@ -127,33 +129,33 @@ const group:any = defineComponent({
       isEdit: false,
       type: [
         {
-          icon: 'https://web.sdk.qcloud.com/im/assets/images/Public.svg',
+          icon: userStore.user.avatar,
           label: '公开群（Public）',
           type: group.TUIServer.TUICore.TIM.TYPES.GRP_PUBLIC,
-          detail: '类似 QQ 群，创建后群主可以指定群管理员，用户搜索群 ID 发起加群申请后，需要群主或管理员审批通过才能入群。详见',
-          src: '产品文档',
+          // detail: '类似 QQ 群，创建后群主可以指定群管理员，用户搜索群 ID 发起加群申请后，需要群主或管理员审批通过才能入群。详见',
+          // src: '产品文档',
         },
-        {
-          icon: 'https://web.sdk.qcloud.com/im/assets/images/Meeting.svg',
-          label: '临时会议群（Meeting）',
-          type: group.TUIServer.TUICore.TIM.TYPES.GRP_MEETING,
-          detail: '创建后可以随意进出，且支持查看入群前消息；适合用于音视频会议场景、在线教育场景等与实时音视频产品结合的场景。详见',
-          src: '产品文档',
-        },
-        {
-          icon: 'https://web.sdk.qcloud.com/im/assets/images/Work.svg',
-          label: '好友工作群（Work）',
-          type: group.TUIServer.TUICore.TIM.TYPES.GRP_WORK,
-          detail: '类似普通微信群，创建后仅支持已在群内的好友邀请加群，且无需被邀请方同意或群主神奇。详见',
-          src: '产品文档',
-        },
-        {
-          icon: 'https://web.sdk.qcloud.com/im/assets/images/AVChatroom.svg',
-          label: '直播群（AVChatroom）',
-          type: group.TUIServer.TUICore.TIM.TYPES.GRP_AVCHATROOM,
-          detail: '创建后可以随意进出，没有群成员数量上限，但不支持历史消息存储；适合与直播产品结合，用于弹幕聊天场景。详见',
-          src: '产品文档',
-        },
+        // {
+        //   icon: 'https://web.sdk.qcloud.com/im/assets/images/Meeting.svg',
+        //   label: '临时会议群（Meeting）',
+        //   type: group.TUIServer.TUICore.TIM.TYPES.GRP_MEETING,
+        //   detail: '创建后可以随意进出，且支持查看入群前消息；适合用于音视频会议场景、在线教育场景等与实时音视频产品结合的场景。详见',
+        //   src: '产品文档',
+        // },
+        // {
+        //   icon: 'https://web.sdk.qcloud.com/im/assets/images/Work.svg',
+        //   label: '好友工作群（Work）',
+        //   type: group.TUIServer.TUICore.TIM.TYPES.GRP_WORK,
+        //   detail: '类似普通微信群，创建后仅支持已在群内的好友邀请加群，且无需被邀请方同意或群主神奇。详见',
+        //   src: '产品文档',
+        // },
+        // {
+        //   icon: 'https://web.sdk.qcloud.com/im/assets/images/AVChatroom.svg',
+        //   label: '直播群（AVChatroom）',
+        //   type: group.TUIServer.TUICore.TIM.TYPES.GRP_AVCHATROOM,
+        //   detail: '创建后可以随意进出，没有群成员数量上限，但不支持历史消息存储；适合与直播产品结合，用于弹幕聊天场景。详见',
+        //   src: '产品文档',
+        // },
       ],
     });
 
