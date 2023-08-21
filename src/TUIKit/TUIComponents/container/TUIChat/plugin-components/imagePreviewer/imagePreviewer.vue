@@ -21,7 +21,11 @@
       </ul>
     </div>
     <i class="icon icon-close" @click="close" v-show="!isH5" />
-    <div class="image-button image-button-left" v-show="!isH5 && currentImageIndex > 0" @click="goPrev">
+    <div
+      class="image-button image-button-left"
+      v-show="!isH5 && currentImageIndex > 0"
+      @click="goPrev"
+    >
       <i class="icon icon-left-arrow"></i>
     </div>
     <div
@@ -36,21 +40,23 @@
       <i class="icon icon-zoom-out" @click="zoomOut"></i>
       <i class="icon icon-refresh-left" @click="rotateLeft"></i>
       <i class="icon icon-refresh-right" @click="rotateRight"></i>
-      <span class="image-counter">{{ currentImageIndex + 1 }} / {{ imageList.length }}</span>
+      <span class="image-counter"
+        >{{ currentImageIndex + 1 }} / {{ imageList.length }}</span
+      >
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import TUIEnv from '../../../../../TUIPlugin/TUIEnv';
-import { defineProps, ref, defineEmits, watchEffect, onMounted, onUnmounted } from 'vue';
-import { Message } from '../../interface';
-import { isNumber } from '@vueuse/core';
+import TUIEnv from "../../../../../TUIPlugin/TUIEnv"
+import { defineProps, ref, defineEmits, watchEffect, onMounted, onUnmounted } from "vue"
+import { Message } from "../../interface"
+import { isNumber } from "lodash"
 interface touchesPosition {
-  pageX1?: number;
-  pageY1?: number;
-  pageX2?: number;
-  pageY2?: number;
+  pageX1?: number
+  pageY1?: number
+  pageX2?: number
+  pageY2?: number
 }
 const props = defineProps({
   imageList: {
@@ -61,65 +67,65 @@ const props = defineProps({
     type: Object,
     default: () => ({} as Message),
   },
-});
-const emit = defineEmits(['close']);
-const zoom = ref(1);
-const rotate = ref(0);
-const minZoom = ref(0.1);
-const currentImageIndex = ref(0);
-const image = ref();
-const ul = ref();
-const { isH5 } = TUIEnv();
+})
+const emit = defineEmits(["close"])
+const zoom = ref(1)
+const rotate = ref(0)
+const minZoom = ref(0.1)
+const currentImageIndex = ref(0)
+const image = ref()
+const ul = ref()
+const { isH5 } = TUIEnv()
 // touch
-let startX = 0;
-let touchStore = {} as touchesPosition;
-let moveFlag = false;
-let twoTouchesFlag = false;
-let timer: number | null = null;
+let startX = 0
+let touchStore = {} as touchesPosition
+let moveFlag = false
+let twoTouchesFlag = false
+let timer: number | null = null
 
 watchEffect(() => {
   currentImageIndex.value = props.imageList.findIndex((message: any) => {
-    return message.ID === props.currentImage.ID;
-  });
-});
+    return message.ID === props.currentImage.ID
+  })
+})
 
 const debounce = (func: any, wait = 200) => {
-  let timer: any;
+  let timer: any
   return function () {
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(func, wait);
-  };
-};
+    if (timer) clearTimeout(timer)
+    timer = setTimeout(func, wait)
+  }
+}
 
 const handleTouchStart = (e: any) => {
-  e.preventDefault();
-  moveInit(e);
-  twoTouchesInit(e);
-};
+  e.preventDefault()
+  moveInit(e)
+  twoTouchesInit(e)
+}
 
 const handleTouchMove = (e: any) => {
-  e.preventDefault();
-  moveFlag = true;
+  e.preventDefault()
+  moveFlag = true
   if (e.touches && e.touches.length === 2) {
-    twoTouchesFlag = true;
-    handleTwoTouches(e);
+    twoTouchesFlag = true
+    handleTwoTouches(e)
   }
-};
+}
 
 const handleTouchEnd = (e: any) => {
-  e.preventDefault();
-  let moveEndX = 0;
-  let X = 0;
+  e.preventDefault()
+  let moveEndX = 0
+  let X = 0
   if (twoTouchesFlag) {
     if (!timer) {
-      twoTouchesFlag = false;
-      delete touchStore.pageX2;
-      delete touchStore.pageY2;
+      twoTouchesFlag = false
+      delete touchStore.pageX2
+      delete touchStore.pageY2
       timer = setTimeout(() => {
-        timer = null;
-      }, 200);
+        timer = null
+      }, 200)
     }
-    return;
+    return
   }
   // H5 touch move to left to go to prev image
   // H5 touch move to right to go to next image
@@ -127,144 +133,149 @@ const handleTouchEnd = (e: any) => {
     switch (moveFlag) {
       // touch event
       case true:
-        moveEndX = e?.changedTouches[0]?.pageX;
-        X = moveEndX - startX;
+        moveEndX = e?.changedTouches[0]?.pageX
+        X = moveEndX - startX
         if (X > 100) {
-          goPrev();
+          goPrev()
         } else if (X < -100) {
-          goNext();
+          goNext()
         }
-        break;
+        break
       // click event
       case false:
-        close();
-        break;
+        close()
+        break
     }
     timer = setTimeout(() => {
-      timer = null;
-    }, 200);
+      timer = null
+    }, 200)
   }
-};
+}
 
 const handleTouchCancel = (e: any) => {
-  twoTouchesFlag = false;
-  delete touchStore.pageX1;
-  delete touchStore.pageY1;
-};
+  twoTouchesFlag = false
+  delete touchStore.pageX1
+  delete touchStore.pageY1
+}
 
 const handleWheel = (e: any) => {
-  e.preventDefault();
-  if (Math.abs(e.deltaX) !== 0 && Math.abs(e.deltaY) !== 0) return;
-  let scale = zoom.value;
-  scale += e.deltaY * (e.ctrlKey ? -0.01 : 0.002);
-  scale = Math.min(Math.max(0.125, scale), 4);
-  zoom.value = scale;
-};
+  e.preventDefault()
+  if (Math.abs(e.deltaX) !== 0 && Math.abs(e.deltaY) !== 0) return
+  let scale = zoom.value
+  scale += e.deltaY * (e.ctrlKey ? -0.01 : 0.002)
+  scale = Math.min(Math.max(0.125, scale), 4)
+  zoom.value = scale
+}
 
 const moveInit = (e: any) => {
-  startX = e?.changedTouches[0]?.pageX;
-  moveFlag = false;
-};
+  startX = e?.changedTouches[0]?.pageX
+  moveFlag = false
+}
 
 const twoTouchesInit = (e: any) => {
-  let touch1 = e?.touches[0];
-  let touch2 = e?.touches[1];
-  touchStore.pageX1 = touch1?.pageX;
-  touchStore.pageY1 = touch1?.pageY;
+  let touch1 = e?.touches[0]
+  let touch2 = e?.touches[1]
+  touchStore.pageX1 = touch1?.pageX
+  touchStore.pageY1 = touch1?.pageY
   if (touch2) {
-    touchStore.pageX2 = touch2?.pageX;
-    touchStore.pageY2 = touch2?.pageY;
+    touchStore.pageX2 = touch2?.pageX
+    touchStore.pageY2 = touch2?.pageY
   }
-};
+}
 
 const handleTwoTouches = (e: any) => {
-  let touch1 = e?.touches[0];
-  let touch2 = e?.touches[1];
+  let touch1 = e?.touches[0]
+  let touch2 = e?.touches[1]
   if (touch2) {
     if (!isNumber(touchStore.pageX2)) {
-      touchStore.pageX2 = touch2.pageX;
+      touchStore.pageX2 = touch2.pageX
     }
     if (!isNumber(touchStore.pageY2)) {
-      touchStore.pageY2 = touch2.pageY;
+      touchStore.pageY2 = touch2.pageY
     }
   }
   const getDistance = (startX: number, startY: number, stopX: number, stopY: number) => {
-    return Math.hypot(stopX - startX, stopY - startY);
-  };
+    return Math.hypot(stopX - startX, stopY - startY)
+  }
   if (
     !isNumber(touchStore.pageX1) ||
     !isNumber(touchStore.pageY1) ||
     !isNumber(touchStore.pageX2) ||
     !isNumber(touchStore.pageY2)
   ) {
-    return;
+    return
   }
   let touchZoom =
     getDistance(touch1.pageX, touch1.pageY, touch2.pageX, touch2.pageY) /
-    getDistance(touchStore.pageX1, touchStore.pageY1, touchStore.pageX2, touchStore.pageY2);
-  zoom.value = Math.min(Math.max(0.5, zoom.value * touchZoom), 4);
-};
+    getDistance(
+      touchStore.pageX1,
+      touchStore.pageY1,
+      touchStore.pageX2,
+      touchStore.pageY2
+    )
+  zoom.value = Math.min(Math.max(0.5, zoom.value * touchZoom), 4)
+}
 
 onMounted(() => {
-  image?.value?.addEventListener('touchstart', handleTouchStart);
-  image?.value?.addEventListener('touchmove', handleTouchMove);
-  image?.value?.addEventListener('touchend', handleTouchEnd);
-  image?.value?.addEventListener('touchcancel;', handleTouchCancel);
+  image?.value?.addEventListener("touchstart", handleTouchStart)
+  image?.value?.addEventListener("touchmove", handleTouchMove)
+  image?.value?.addEventListener("touchend", handleTouchEnd)
+  image?.value?.addEventListener("touchcancel;", handleTouchCancel)
   // web: mouse wheel & mac wheel
-  image?.value?.addEventListener('wheel', handleWheel);
+  image?.value?.addEventListener("wheel", handleWheel)
   // web: close on esc keydown
-  document?.addEventListener('keydown', handleEsc);
-});
+  document?.addEventListener("keydown", handleEsc)
+})
 
 const handleEsc = (e: any) => {
-  e.preventDefault();
+  e.preventDefault()
   if (e?.keyCode === 27) {
-    close();
+    close()
   }
-};
+}
 const zoomIn = () => {
-  zoom.value += 0.1;
-};
+  zoom.value += 0.1
+}
 const zoomOut = () => {
-  zoom.value = zoom.value - 0.1 > minZoom.value ? zoom.value - 0.1 : minZoom.value;
-};
+  zoom.value = zoom.value - 0.1 > minZoom.value ? zoom.value - 0.1 : minZoom.value
+}
 const close = () => {
-  emit('close');
-};
+  emit("close")
+}
 const rotateLeft = () => {
-  rotate.value -= 90;
-};
+  rotate.value -= 90
+}
 const rotateRight = () => {
-  rotate.value += 90;
-};
+  rotate.value += 90
+}
 const goNext = () => {
-  ul.value.style.transition = '0.5s';
-  currentImageIndex.value < props.imageList.length - 1 && currentImageIndex.value++;
-  initStyle();
-};
+  ul.value.style.transition = "0.5s"
+  currentImageIndex.value < props.imageList.length - 1 && currentImageIndex.value++
+  initStyle()
+}
 const goPrev = () => {
-  ul.value.style.transition = '0.5s';
-  currentImageIndex.value > 0 && currentImageIndex.value--;
-  initStyle();
-};
+  ul.value.style.transition = "0.5s"
+  currentImageIndex.value > 0 && currentImageIndex.value--
+  initStyle()
+}
 const initStyle = () => {
-  zoom.value = 1;
-  rotate.value = 0;
-};
+  zoom.value = 1
+  rotate.value = 0
+}
 
 onUnmounted(() => {
-  image?.value?.removeEventListener('touchstart', handleTouchStart);
-  image?.value?.removeEventListener('touchmove', handleTouchMove);
-  image?.value?.removeEventListener('touchend', handleTouchEnd);
-  image?.value?.removeEventListener('touchcancel;', handleTouchCancel);
-  image?.value?.removeEventListener('wheel', handleWheel);
-  document?.removeEventListener('keydown', handleEsc);
-});
+  image?.value?.removeEventListener("touchstart", handleTouchStart)
+  image?.value?.removeEventListener("touchmove", handleTouchMove)
+  image?.value?.removeEventListener("touchend", handleTouchEnd)
+  image?.value?.removeEventListener("touchcancel;", handleTouchCancel)
+  image?.value?.removeEventListener("wheel", handleWheel)
+  document?.removeEventListener("keydown", handleEsc)
+})
 </script>
 
 <style lang="scss" scoped>
-@import url('../../../../styles/common.scss');
-@import url('../../../../styles/icon.scss');
+@import url("../../../../styles/common.scss");
+@import url("../../../../styles/icon.scss");
 .image-previewer {
   position: fixed;
   z-index: 12;

@@ -37,7 +37,7 @@ export const useLogin = () => {
           service: 'Login.userLogin',
           user_login: phone,
           code,
-          source: 'android',
+          source: 'webim',
           mobileid: v4(),
           country_code: countryCode
         }
