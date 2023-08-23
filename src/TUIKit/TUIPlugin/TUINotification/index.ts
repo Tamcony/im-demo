@@ -133,8 +133,8 @@ class TUINotification {
         break
     }
     const userStore = useUserStore()
-    this.notificationTitle += `-${userStore.user?.user_nickname || ''}`
-    const notification = new Notification(this.notificationTitle, options)
+    // this.notificationTitle += `-${userStore.user?.user_nickname || ''}`
+    const notification = new Notification(this.notificationTitle + `-${userStore.user?.user_nickname || ''}`, options)
 
     notification.onclick = () => {
       window.focus()

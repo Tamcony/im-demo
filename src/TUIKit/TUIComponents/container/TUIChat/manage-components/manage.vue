@@ -317,6 +317,7 @@ import Dialog from '../../../components/dialog/index.vue'
 import Vuex from 'vuex'
 import { handleErrorPrompts } from '../../utils'
 import useClipboard from 'vue-clipboard3'
+import { TUICore } from '@/TUIKit/TUICore'
 
 const manage = defineComponent({
   components: {
@@ -534,7 +535,7 @@ const manage = defineComponent({
 
     const addMember = async (userIDList: any) => {
       console.log(userIDList)
-      debugger
+
       const { conversation } = data
       const options: any = {
         groupID: conversation.groupProfile.groupID,

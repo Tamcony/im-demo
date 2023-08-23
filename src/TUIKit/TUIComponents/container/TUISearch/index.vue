@@ -60,6 +60,7 @@ import { onClickOutside } from '@vueuse/core'
 import { handleErrorPrompts, handleSuccessPrompts } from '../utils'
 import { useFans } from '@/apis/useFans'
 import { useUserStore } from '@/stores/userStore'
+import { TUICore } from '@/TUIKit'
 
 const { getFans } = useFans()
 
@@ -170,7 +171,12 @@ const TUISearch = defineComponent({
       if (params.type === TUIServer.TUICore.TIM.TYPES.GRP_PUBLIC) {
         data.group.joinOption = TUIServer.TUICore.TIM.TYPES.JOIN_OPTIONS_NEED_PERMISSION
       }
-      const options = { ...data.group, ...params }
+      const type = new TUICore(
+        {
+          SDKAppID: 1400817730,
+        }
+      ).TIM.TYPES.INVITE_OPTIONS_FREE_ACCESS
+      const options = { ...data.group, ...params, inviteOption: type }
       if (params.type === TUIServer.TUICore.TIM.TYPES.GRP_AVCHATROOM) {
         delete options.memberList
         delete options.joinOption
